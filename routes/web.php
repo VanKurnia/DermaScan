@@ -2,14 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SkinDiseaseAPI;
+use App\Http\Controllers\SocialiteController;
 
 Route::get('/', function () {
     return view('components/landing-page');
 });
 
+Route::get('auth/google', [SocialiteController::class, 'googleLogin'])
+    ->name('auth.google');
+
+Route::get('auth/google/callback', [SocialiteController::class, 'googleAuthentication']);
+
 Route::get('/dashboard', function () {
     return view('components/dashboard');
-})->middleware(['auth', 'verified']);
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/history', function () {
     return view('components/history');
