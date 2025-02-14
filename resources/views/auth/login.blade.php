@@ -16,13 +16,19 @@
                             Login ke Akun Anda
                         </h1>
                     </div>
-                    <form class="space-y-4 md:space-y-6" action="#">
+                    <form class="space-y-4 md:space-y-6" action="{{ route('login') }}" method="POST">
+                        @csrf
                         <div>
                             <label for="email"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                             <input type="email" name="email" id="email"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Tuliskan email anda..." required="">
+                                placeholder="Tuliskan email anda..." required="" value="{{ old('email') }}">
+                            @error('email')
+                                <span class="text-sm text-red-500 mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div>
                             <label for="password"
@@ -31,13 +37,17 @@
                                 placeholder="Tuliskan password anda..."
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required="">
+                            @error('password')
+                                <p class="text-sm text-red-500 mt-1">
+                                    <strong>{{ $message }}</strong>
+                                </p>
+                            @enderror
                         </div>
                         <div class="flex items-center justify-between">
                             <div class="flex items-start">
                                 <div class="flex items-center h-5">
-                                    <input id="remember" aria-describedby="remember" type="checkbox"
-                                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                                        required="">
+                                    <input id="remember" aria-describedby="remember" type="checkbox" name="remember"
+                                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800">
                                 </div>
                                 <div class="ml-3 text-sm">
                                     <label for="remember" class="text-gray-500 dark:text-gray-300">
@@ -45,7 +55,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <a href="#"
+                            <a href="{{ route('password.request') }}"
                                 class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
                                 Lupa password?
                             </a>
@@ -55,9 +65,11 @@
                             Login
                         </button>
                         <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                            Belum memiliki akun? <a href="/register"
-                                class="font-medium text-primary-600 hover:underline dark:text-primary-500">Register
-                                disini</a>
+                            Belum memiliki akun?
+                            <a href="/register"
+                                class="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                                Register disini
+                            </a>
                         </p>
                     </form>
                 </div>
