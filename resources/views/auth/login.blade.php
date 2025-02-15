@@ -16,6 +16,14 @@
                             Login ke Akun Anda
                         </h1>
                     </div>
+                    @if (session('status'))
+                        <div class="text-center">
+                            <h1 class="text-base font-bold leading-tight tracking-tight text-green-500">
+                                {{ session('status') }}
+                                {{-- Informasi Profil Anda Berhasil Diperbarui --}}
+                            </h1>
+                        </div>
+                    @endif
                     <form class="space-y-4 md:space-y-6" action="{{ route('login') }}" method="POST">
                         @csrf
                         <div>
@@ -25,15 +33,20 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Tuliskan email anda..." required="" value="{{ old('email') }}">
                             @error('email')
+                                <?php
+                                if ($message === 'These credentials do not match our records.') {
+                                    $alert = 'Email/Password yang anda masukkan tidak sesuai';
+                                }
+                                ?>
                                 <span class="text-sm text-red-500 mt-1" role="alert">
-                                    <strong>{{ $message }}</strong>
+                                    <strong>{{ $alert }}</strong>
                                 </span>
                             @enderror
                         </div>
                         <div>
                             <label for="password"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                            <input type="password" name="password" id="password"
+                            <input type="password" minlength="8" name="password" id="password"
                                 placeholder="Tuliskan password anda..."
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required="">

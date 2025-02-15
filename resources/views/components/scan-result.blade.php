@@ -109,6 +109,7 @@
         </div>
     </main>
 
+    {{-- handling chart --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const ctx = document.getElementById('probabilityChart').getContext('2d');
@@ -166,6 +167,15 @@
                     }
                 }
             });
+        });
+    </script>
+
+    {{-- inisiasi ulang flowbite --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.initFlowbite) {
+                window.initFlowbite(); // Pastikan Flowbite diinisialisasi ulang
+            }
         });
     </script>
 </x-layout-menu>

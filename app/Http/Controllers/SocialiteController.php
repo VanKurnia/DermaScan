@@ -22,7 +22,12 @@ class SocialiteController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
 
-            $user = User::where('google_id', $googleUser->id)->first();
+            // $user = User::where('google_id', $googleUser->id)->first();
+            $user = User::where('email', $googleUser->email)->first();
+
+            // debugging
+            // dump($googleUser);
+            // dd($user);
 
             if ($user) {
                 Auth::login($user);
@@ -33,6 +38,7 @@ class SocialiteController extends Controller
                     'email' => $googleUser->email,
                     'password' => Hash::make('Password@1234'),
                     'google_id' => $googleUser->id,
+                    'google_avatar' => $googleUser->avatar,
                     'email_verified_at' => now(),
                 ]);
 

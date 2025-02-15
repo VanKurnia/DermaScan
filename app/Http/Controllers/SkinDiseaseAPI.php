@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Http;
 
 class SkinDiseaseAPI extends Controller
 {
+
+    // testing api
     public function testGet()
     {
         $response = Http::get('http://localhost:9000/test');
@@ -23,6 +25,7 @@ class SkinDiseaseAPI extends Controller
         return view('components.dashboard', ['data' => $data]);
     }
 
+    // ujicoba
     public function postDisease(Request $request)
     {
         $request->validate([
@@ -74,13 +77,12 @@ class SkinDiseaseAPI extends Controller
 
             if ($response->successful()) {
                 // return response()->json($response->json());
+                // return redirect()->route('scan.result', [
                 return view('components.scan-result', [
                     'data' => $response->json(),
-                    // 'preview' => $file,
                     'preview' => 'data:image/' . $file->extension() . ';base64,' . $fileContent,
                 ]);
             }
-
             return response()->json(['error' => 'Failed to fetch data'], $response->status());
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

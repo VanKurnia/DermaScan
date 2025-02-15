@@ -15,10 +15,10 @@
                             class="mb-8 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Reset Password
                         </h1>
-                        @if (session('status'))
+                        @if (session('status') === 'We have emailed your password reset link.')
                             <p class="text-xl font- leading-tight tracking-tight text-green-500">
-                                {{-- A fresh verification link has been sent to your email address. --}}
-                                {{ session('status') }}
+                                Kami sudah mengirimkan password reset link melalui email anda
+                                {{-- {{ session('status') }} --}}
                             </p>
                         @endif
                     </div>

@@ -154,6 +154,19 @@
             captureImageBtn.classList.add("hidden");
         });
 
+        function reinitializeDropdown() {
+            document.querySelectorAll("[data-dropdown-toggle]").forEach(button => {
+                let dropdownId = button.getAttribute("data-dropdown-toggle");
+                let dropdown = document.getElementById(dropdownId);
+
+                if (!dropdown) return;
+
+                button.addEventListener("click", function() {
+                    dropdown.classList.toggle("hidden");
+                });
+            });
+        }
+
         // Fungsi untuk mengunggah gambar
         btnAnalisaKamera.addEventListener("click", function() {
             canvas.toBlob((blob) => {
@@ -170,14 +183,38 @@
                     })
                     .then(response => response.text()) // Ambil HTML dari server
                     .then(html => {
-                        document.open();
-                        document.write(html); // Tampilkan halaman hasil scan
-                        document.close();
+                        // document.open();
+                        // document.write(html); // Tampilkan halaman hasil scan
+                        window.location.href = "/scan-image"; // alternatif 1
+                        // document.close();
                     })
                     .catch(error => {
                         console.error("Error:", error);
                         alert("Terjadi kesalahan!");
                     });
+                // .then(response => {
+                //     if (!response.ok) { // Cek status HTTP untuk error
+                //         throw new Error(`HTTP error! status: ${response.status}`);
+                //     }
+                //     return response.json(); // Parse respons JSON
+                // })
+                // .then(data => {
+                //     if (data.status === 'success') { // Periksa status dari server
+                //         // Simpan data di localStorage atau sessionStorage jika diperlukan
+                //         localStorage.setItem("hasil_scan", JSON.stringify(data));
+
+                //         // Arahkan ke halaman hasil
+                //         window.location.href = "/scan-result";
+                //     } else if (data.status === 'error') {
+                //         console.error("Error:", data.error);
+                //         alert(data.error); // Tampilkan pesan error kepada pengguna
+                //     }
+
+                // })
+                // .catch(error => {
+                //     console.error("Error:", error);
+                //     alert("Terjadi kesalahan!"); // Tampilkan pesan error umum
+                // });
             }, "image/png");
         });
 

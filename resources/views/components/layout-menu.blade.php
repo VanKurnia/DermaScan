@@ -38,7 +38,9 @@
             <div class="antialiased bg-gray-50 dark:bg-gray-900">
                 <x-navigation></x-navigation>
                 <x-sidebar></x-sidebar>
-                {{ $slot }}
+                <div id="content">
+                    {{ $slot }}
+                </div>
             </div>
         </div>
     </div>

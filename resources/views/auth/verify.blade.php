@@ -15,11 +15,11 @@
                             class="mb-8 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Verifikasi Akun Anda
                         </h1>
-                        {{-- @if (session('resent'))
+                        @if (session('resent'))
                             <p class="text-xl font- leading-tight tracking-tight text-gray-900 dark:text-white">
                                 A fresh verification link has been sent to your email address.
                             </p>
-                        @endif --}}
+                        @endif
                         <p class="text-lg font-medium leading-tight tracking-tight text-gray-900 dark:text-white">
                             {{-- Before proceeding, please check your email for a verification link --}}
                             Sebelum melanjutkan, silahkan cek email anda untuk melakukan verifikasi
