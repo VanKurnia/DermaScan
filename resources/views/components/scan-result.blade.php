@@ -118,7 +118,8 @@
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ["{{ $data['disease'] }}"],
+                    // labels: ["{{ $data['disease'] }}"],
+                    labels: ["Akurasi : "],
                     datasets: [{
                         // label: "Tingkat Akurasi",
                         data: [{{ $data['probability'] * 100 }}], // Ubah ke persen

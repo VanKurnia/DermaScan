@@ -1,12 +1,17 @@
 <?php
 
+use App\Models\HistoryScan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MainController;
 use App\Http\Controllers\SkinDiseaseAPI;
 use App\Http\Controllers\SocialiteController;
 
 Route::get('/', function () {
     return view('components/landing-page');
 });
+
+// AUTH
 
 Route::get('auth/google', [SocialiteController::class, 'googleLogin'])
     ->name('auth.google');
@@ -21,13 +26,31 @@ Route::get('profile/password', function () {
     return view('profile/password');
 })->middleware(['auth', 'verified'])->name('profile.password');
 
+// MENU
+
 Route::get('/dashboard', function () {
     return view('components/dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/history', function () {
-    return view('components/history');
-})->middleware(['auth', 'verified']);
+
+    $history = HistoryScan::where('user_id', Auth::id())
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
+
+    // dd($history);
+
+    return view('components/history', compact('history'));
+})->middleware(['auth', 'verified'])->name('history');
+
+
+Route::get('/history-details/{id}', [MainController::class, 'historyDetails'])
+    ->middleware(['auth', 'verified']);
+
+Route::delete('/history/{id}', [MainController::class, 'historyDelete'])->name('history.destroy');
+
+
+// MONETIZATION
 
 Route::get('/pay-per-use', function () {
     return view('components/pay-per-use');

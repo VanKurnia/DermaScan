@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HistoryScan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class SkinDiseaseAPI extends Controller
@@ -76,10 +78,30 @@ class SkinDiseaseAPI extends Controller
             // dd($response->json());
 
             if ($response->successful()) {
-                // return response()->json($response->json());
-                // return redirect()->route('scan.result', [
+
+                // DEBUGGING
+                // dump($response);
+                // dd($response->json());
+
+                // ubah format data agar mudah digunakan
+                $responseData = $response->json();
+
+                // SAVE REQUEST
+                // Simpan file ke folder storage/app/public/uploads :
+                $path = $request->file('image')->store('uploads', 'public');
+
+                // Simpan hasil scan ke database :
+                HistoryScan::create([
+                    'user_id' => Auth::id(), // Ambil ID user yang sedang login
+                    'image_url' => $path, // Simpan path file yang diupload
+                    'disease_name' => $responseData['disease'],
+                    'confidence' => $responseData['probability'],
+                    'diagnosis_text' => $responseData,
+                    // 'recommended_action' => $responseData['recommendation'],
+                ]);
+
                 return view('components.scan-result', [
-                    'data' => $response->json(),
+                    'data' => $responseData,
                     'preview' => 'data:image/' . $file->extension() . ';base64,' . $fileContent,
                 ]);
             }
