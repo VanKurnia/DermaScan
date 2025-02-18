@@ -5,11 +5,38 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\SkinDiseaseAPI;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\SocialiteController;
 
 Route::get('/', function () {
     return view('components/landing-page');
 });
+
+// MIDTRANS
+Route::post('/payment', [PaymentController::class, 'createTransaction'])
+    ->middleware('auth');
+
+// Route untuk menampilkan form pembayaran atau halaman checkout
+Route::get('/checkout', [PaymentController::class, 'showCheckoutForm']); // Contoh
+
+// Route untuk update status pembayaran (dari frontend setelah sukses)
+Route::post('/payment/update-status', [PaymentController::class, 'updatePaymentStatus']);
+
+// Route untuk menangani callback dari Midtrans (webhook)
+Route::post('/midtrans/callback', [PaymentController::class, 'handleMidtransCallback']);
+
+// Route untuk halaman success
+Route::get('/success', [PaymentController::class, 'success']);
+
+// Route untuk halaman pending
+Route::get('/pending', [PaymentController::class, 'pending']);
+
+// Route::post('/payment', [PaymentController::class, 'createTransaction'])->name('payment.create');
+// Route::post('/payment/notification', [PaymentController::class, 'handleNotification'])->name('payment.notification');
+
+
+// Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
 
 // AUTH
 

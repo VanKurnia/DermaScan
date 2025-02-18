@@ -183,10 +183,10 @@
                     })
                     .then(response => response.text()) // Ambil HTML dari server
                     .then(html => {
-                        // document.open();
-                        // document.write(html); // Tampilkan halaman hasil scan
-                        window.location.href = "/scan-image"; // alternatif 1
-                        // document.close();
+                        document.open();
+                        document.write(html); // Tampilkan halaman hasil scan
+                        // window.location.href = "/scan-image"; // alternatif 1
+                        document.close();
                     })
                     .catch(error => {
                         console.error("Error:", error);
