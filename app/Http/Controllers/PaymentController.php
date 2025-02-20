@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PremiumServices;
 use Carbon\Carbon;
 use Midtrans\Snap;
 use Midtrans\Config;
+use NumberFormatter;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\PremiumServices;
 use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
@@ -120,11 +121,50 @@ class PaymentController extends Controller
         }
     }
 
+    public function cancelPayment(Request $request)
+    {
+        $orderId = $request->input('order_id');
+
+        try {
+            $transaction = Transaction::where('order_id', $orderId)->first();
+            if ($transaction) {
+                $transaction->delete();
+            }
+            return response()->json(['message' => 'Payment canceled successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function success(Request $request)
     {
-        $order_id = $request->query('order_id');
-        dd($order_id);
-        return view('success', ['order_id' => $order_id]); // Tampilkan view success.blade.php
+
+        $transaksi = Transaction::where('order_id', $request->query('order_id'))->first();
+
+        [$service_type, $service_amount] = explode('-', $transaksi->service_purchased);
+
+        if ($service_type === 'PPU') {
+            $service_purchased = $service_amount . 'x Scans';
+        } elseif ($service_type === 'SUB') {
+            $service_purchased = 'Subscription ' . $service_amount . ' Bulan';
+        };
+
+        $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
+
+        // $midtrans_data = $transaksi->response_data;
+
+        $detail_transaksi = [
+            'order_id'          => $transaksi->order_id,
+            'service_purchased' => $service_purchased,
+            'amount'            => $formatter->formatCurrency($transaksi->amount, 'IDR'),
+            'purchase_time'     => $transaksi->created_at,
+            // 'payment_method'    => $midtrans_data['payment_type'],
+        ];
+
+        // dd($order_id);
+        return view('components.payment-success', [
+            'detail_transaksi' => $detail_transaksi,
+        ]);
     }
 
     public function pending(Request $request)
