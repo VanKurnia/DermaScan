@@ -20,10 +20,18 @@ class DatabaseSeeder extends Seeder
             'name' => 'Ivan Kurniawan (Van)',
             'email' => 'ivankurniawan474@gmail.com',
             'email_verified_at' => now(),
-            // 'password' => '$2y$12$deDI3VV/5LAU6L9gzKGqCu98gZz2DWKZGw7zUOS27F0hi5rF/1iM6',
             'password' => Hash::make('IvanKurniawan070'),
             'google_id' => '117348572025608509171',
             'google_avatar' => 'https://lh3.googleusercontent.com/a/ACg8ocLYH5-LIl-LQXcIeRRc6Z5tEYSBdSEA5tDLuoEV0MYk9qWCIwsR=s96-c',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Ivan Kurniawan',
+            'email' => 'ivankurniawan071@gmail.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('IvanKurniawan070'),
+            'google_id' => '110319084232809445193',
+            'google_avatar' => 'https://lh3.googleusercontent.com/a/ACg8ocKRAwbvPAS6hqJdhYoay-qu-dAZHAxun8Q4GskUdLlU8VetYL4=s96-c',
         ]);
     }
 }

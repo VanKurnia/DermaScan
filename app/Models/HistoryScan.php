@@ -17,10 +17,12 @@ class HistoryScan extends Model
         'disease_name',
         'confidence',
         'diagnosis_text',
+        'other_result',
     ];
 
     protected $casts = [
         'diagnosis_text' => 'array', // Otomatis mengonversi JSON ke array
+        'other_result' => 'array', // Otomatis mengonversi JSON ke array
     ];
 
     public function user()

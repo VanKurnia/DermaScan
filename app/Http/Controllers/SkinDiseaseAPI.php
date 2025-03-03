@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HistoryScan;
+use App\Models\PremiumServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -79,29 +80,66 @@ class SkinDiseaseAPI extends Controller
 
             if ($response->successful()) {
 
-                // DEBUGGING
-                // dump($response);
-                // dd($response->json());
-
                 // ubah format data agar mudah digunakan
-                $responseData = $response->json();
+                $responseData   = $response->json();
+                $otherResult    = $responseData['predictions'];
+                $responseData   = $responseData['predictions'][0];
 
-                // SAVE REQUEST
-                // Simpan file ke folder storage/app/public/uploads :
-                $path = $request->file('image')->store('uploads', 'public');
+                // return response()->json([
+                //     'responseData' => $responseData,
+                //     'otherResult' => $otherResult
+                // ]);
 
                 // Simpan hasil scan ke database :
-                HistoryScan::create([
-                    'user_id' => Auth::id(), // Ambil ID user yang sedang login
-                    'image_url' => $path, // Simpan path file yang diupload
-                    'disease_name' => $responseData['disease'],
-                    'confidence' => $responseData['probability'],
-                    'diagnosis_text' => $responseData,
-                    // 'recommended_action' => $responseData['recommendation'],
-                ]);
+                $premium_service = PremiumServices::where('user_id', Auth::id())->first();
+
+                if ($premium_service && $premium_service['status'] === 'premium') {
+                    $path = $request->file('image')->store('uploads', 'public');
+                    HistoryScan::create([
+                        'user_id' => Auth::id(),
+                        'image_url' => $path,
+                        'disease_name' => $responseData['disease'],
+                        'confidence' => $responseData['probability'],
+                        'diagnosis_text' => $responseData,
+                        'other_result' => $otherResult,
+                        // 'other_result' => json_encode($otherResult),
+                        // 'recommended_action' => $responseData['recommendation'],
+                    ]);
+                } elseif ($premium_service && $premium_service['premium_scans'] > 0) {
+                    $path = $request->file('image')->store('uploads', 'public');
+                    $premium_service['premium_scans'] = $premium_service['premium_scans'] - 1;
+                    $premium_service->save();
+
+                    HistoryScan::create([
+                        'user_id' => Auth::id(),
+                        'image_url' => $path,
+                        'disease_name' => $responseData['disease'],
+                        'confidence' => $responseData['probability'],
+                        'diagnosis_text' => $responseData,
+                        'other_result' => $otherResult,
+                        // 'other_result' => json_encode($otherResult),
+                        // 'recommended_action' => $responseData['recommendation'],
+                    ]);
+                } else {
+                    unset($responseData['symptoms']);
+                    unset($responseData['causes']);
+                    unset($responseData['treatments']);
+                    $otherResult = [];
+
+                    // jika pengguna gratis ingin di save
+                    // HistoryScan::create([
+                    //     'user_id' => Auth::id(),
+                    //     'image_url' => $path,
+                    //     'disease_name' => $responseData['disease'],
+                    //     'confidence' => $responseData['probability'],
+                    //     'diagnosis_text' => $responseData,
+                    //     // 'recommended_action' => $responseData['recommendation'],
+                    // ]);
+                }
 
                 return view('components.scan-result', [
                     'data' => $responseData,
+                    'otherResult' => $otherResult,
                     'preview' => 'data:image/' . $file->extension() . ';base64,' . $fileContent,
                 ]);
             }
@@ -109,21 +147,5 @@ class SkinDiseaseAPI extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-
-
-        // SAVE REQUEST
-        // $request->validate([
-        //     'image' => 'required|image|mimes:jpg,png,jpeg|max:2048', // Maks 2MB
-        // ]);
-
-        // // Simpan file ke folder storage/app/public/uploads
-        // $path = $request->file('image')->store('uploads', 'public');
-
-        // return view('components.scan-result');
-
-        // return response()->json([
-        //     'message' => 'File berhasil diupload!',
-        //     'file_path' => asset('storage/' . $path),
-        // ]);
     }
 }

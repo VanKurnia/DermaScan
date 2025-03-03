@@ -18,6 +18,7 @@ class MainController extends Controller
         // dd($history['diagnosis_text']);
 
         $data = $history['diagnosis_text'];
+        $otherResult = $history['other_result'];
 
         // Menyiapkan preview gambar dari url ke base64
         $filePath = storage_path('app/public/' . $history['image_url']);
@@ -27,6 +28,7 @@ class MainController extends Controller
 
         return view('components.scan-result', [
             'data' => $data,
+            'otherResult' => $otherResult,
             'preview' => $preview,
         ]);
     }

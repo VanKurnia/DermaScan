@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('confidence', 5, 2);
             // $table->text('diagnosis_text');
             $table->json('diagnosis_text');
+            $table->json('other_result')->nullable();
             // $table->text('recommended_action');
             $table->timestamps();
         });
