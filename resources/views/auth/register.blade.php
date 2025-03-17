@@ -70,7 +70,7 @@
                         <div>
                             <label for="password_confirmation"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Konfirmasi password
+                                Konfirmasi Password
                             </label>
                             <input type="password" minlength="8" name="password_confirmation"
                                 id="password_confirmation" placeholder="Tuliskan ulang password anda..."

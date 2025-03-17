@@ -110,7 +110,7 @@
                                     @if ($otherResult !== [] && count($otherResult) > 1)
                                         <p
                                             class="text-lg font-semibold text-center text-gray-900 dark:text-white sm:text-lg mb-2">
-                                            probabilitas Diagnosis AI :
+                                            Probabilitas Diagnosis AI :
                                         </p>
                                         <div class="max-w-lg mx-auto mt-2 mb-1">
                                             <canvas id="otherResultChart" class="h-64"></canvas>
