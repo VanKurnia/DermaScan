@@ -35,6 +35,11 @@
 </head>
 
 <body>
+    <div id="loadingOverlay"
+        class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+    </div>
+
     <div class="min-h-auto flex flex-col">
         <div>
             <div class="antialiased bg-gray-50 dark:bg-gray-900">

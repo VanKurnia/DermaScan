@@ -84,6 +84,8 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+    'ai_api' => env('AI_API'),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

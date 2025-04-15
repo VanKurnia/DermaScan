@@ -28,6 +28,7 @@ class MainController extends Controller
 
         return view('components.scan-result', [
             'data' => $data,
+            'back' => '/history',
             'otherResult' => $otherResult,
             'preview' => $preview,
         ]);

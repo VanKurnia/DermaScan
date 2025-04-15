@@ -68,12 +68,15 @@ class SkinDiseaseAPI extends Controller
         // encode ke base64 supaya gambar tidak perlu disimpan terlebih dahulu
         $fileContent = base64_encode(file_get_contents($file->getRealPath())); // Encode ke Base64
 
+        // dd(config('app.ai_api'));
+
         try {
             $response = Http::attach(
                 'im', // Sesuaikan dengan API
                 file_get_contents($file->getRealPath()),
                 $file->hashName() // Randomisasi nama file
-            )->post('http://localhost:9000/detect');
+            )->post(config('app.ai_api'));
+            // )->post('http://localhost:9000/detect');
 
             // Debugging API response
             // dd($response->json());
@@ -139,6 +142,7 @@ class SkinDiseaseAPI extends Controller
 
                 return view('components.scan-result', [
                     'data' => $responseData,
+                    'back' => '/dashboard',
                     'otherResult' => $otherResult,
                     'preview' => 'data:image/' . $file->extension() . ';base64,' . $fileContent,
                 ]);

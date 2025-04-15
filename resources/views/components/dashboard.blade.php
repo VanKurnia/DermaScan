@@ -128,6 +128,12 @@
         let openCameraBtn = document.getElementById("openCamera");
         let captureImageBtn = document.getElementById("captureImage");
         let KameraKamera = document.getElementById("btnAnalisaKamera");
+        // let loadingKamera = document.getElementById("loadingKamera");
+        let isAnalisaKameraClicked = false;
+        let btnAnalisaUpload = document.getElementById("btnAnalisaUpload");
+        // let loadingUpload = document.getElementById("loadingUpload");
+        let isAnalisaUploadClicked = false;
+        let loadingOverlay = document.getElementById("loadingOverlay");
         let previewImage = document.getElementById("previewImage");
         let uploadOption = document.getElementById("uploadOption");
 
@@ -193,6 +199,13 @@
 
         // Fungsi untuk mengunggah gambar
         btnAnalisaKamera.addEventListener("click", function() {
+            if (isAnalisaKameraClicked) {
+                return; // Jika sudah diklik, jangan lakukan apa-apa
+            }
+            isAnalisaKameraClicked = true;
+            btnAnalisaKamera.classList.add("pointer-events-none"); // Disable tombol
+            loadingOverlay.classList.remove("hidden"); // Tampilkan loading
+
             canvas.toBlob((blob) => {
                 let formData = new FormData();
                 formData.append("image", blob, "captured_image.png");
@@ -205,40 +218,22 @@
                                 .getAttribute("content")
                         }
                     })
-                    .then(response => response.text()) // Ambil HTML dari server
+                    .then(response => response.text())
                     .then(html => {
                         document.open();
-                        document.write(html); // Tampilkan halaman hasil scan
-                        // window.location.href = "/scan-image"; // alternatif 1
+                        document.write(html);
                         document.close();
                     })
                     .catch(error => {
                         console.error("Error:", error);
                         alert("Terjadi kesalahan!");
+                    })
+                    .finally(() => {
+                        isAnalisaKameraClicked = false; // Reset status klik
+                        btnAnalisaKamera.classList.remove(
+                            "pointer-events-none"); // Enable kembali tombol
+                        loadingOverlay.classList.add("hidden"); // Sembunyikan loading
                     });
-                // .then(response => {
-                //     if (!response.ok) { // Cek status HTTP untuk error
-                //         throw new Error(`HTTP error! status: ${response.status}`);
-                //     }
-                //     return response.json(); // Parse respons JSON
-                // })
-                // .then(data => {
-                //     if (data.status === 'success') { // Periksa status dari server
-                //         // Simpan data di localStorage atau sessionStorage jika diperlukan
-                //         localStorage.setItem("hasil_scan", JSON.stringify(data));
-
-                //         // Arahkan ke halaman hasil
-                //         window.location.href = "/scan-result";
-                //     } else if (data.status === 'error') {
-                //         console.error("Error:", data.error);
-                //         alert(data.error); // Tampilkan pesan error kepada pengguna
-                //     }
-
-                // })
-                // .catch(error => {
-                //     console.error("Error:", error);
-                //     alert("Terjadi kesalahan!"); // Tampilkan pesan error umum
-                // });
             }, "image/png");
         });
 
@@ -249,7 +244,6 @@
             let preview = document.getElementById("previewImage");
             let fileNameText = document.getElementById("fileName");
             let uploadOption = document.getElementById("uploadOption");
-            let btnAnalisa = document.getElementById("btnAnalisaUpload");
 
             if (input.files.length > 0) {
                 let file = input.files[0];
@@ -262,7 +256,7 @@
                 reader.onload = function(e) {
                     preview.src = e.target.result;
                     preview.classList.remove("hidden"); // Tampilkan gambar
-                    btnAnalisa.classList.remove("hidden");
+                    btnAnalisaUpload.classList.remove("hidden");
                     uploadOption.classList.add("hidden"); // Sembunyikan ikon upload
                 };
                 reader.readAsDataURL(file);
@@ -270,9 +264,19 @@
         }
 
         function scanImage() {
+            if (isAnalisaUploadClicked) {
+                return; // Jika sudah diklik, jangan lakukan apa-apa
+            }
+            isAnalisaUploadClicked = true;
+            btnAnalisaUpload.classList.add("pointer-events-none"); // Disable tombol
+            loadingOverlay.classList.remove("hidden"); // Tampilkan loading
+
             let input = document.getElementById("fileInput");
             if (input.files.length === 0) {
                 alert("Pilih file terlebih dahulu!");
+                isAnalisaUploadClicked = false;
+                btnAnalisaUpload.classList.remove("pointer-events-none");
+                loadingOverlay.classList.add("hidden");
                 return;
             }
 
@@ -286,15 +290,20 @@
                         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                     }
                 })
-                .then(response => response.text()) // Ambil HTML dari server
+                .then(response => response.text())
                 .then(html => {
                     document.open();
-                    document.write(html); // Tampilkan halaman hasil scan
+                    document.write(html);
                     document.close();
                 })
                 .catch(error => {
                     console.error("Error:", error);
                     alert("Terjadi kesalahan!");
+                })
+                .finally(() => {
+                    isAnalisaUploadClicked = false; // Reset status klik
+                    btnAnalisaUpload.classList.remove("pointer-events-none"); // Enable kembali tombol
+                    loadingOverlay.classList.add("hidden"); // Sembunyikan loading
                 });
         }
     </script>
