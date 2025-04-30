@@ -116,6 +116,12 @@
                                             <canvas id="otherResultChart" class="h-64"></canvas>
                                         </div>
                                     @endif
+
+                                    <dd
+                                        class="inline-flex items-center rounded bg-amber-100 px-2.5 py-0.5 text-center text-medium font-semibold text-amber-600 dark:bg-amber-800 dark:text-amber-300 mt-3">
+                                        Hasil ini hanya untuk referensi awal. Untuk diagnosis dan perawatan medis lebih
+                                        lanjut, silakan konsultasikan dengan dokter.
+                                    </dd>
                                 </div>
 
                                 <div class="text-center">

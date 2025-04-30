@@ -61,7 +61,8 @@ class SkinDiseaseAPI extends Controller
     public function scanImage(Request $request)
     {
         $request->validate([
-            'image' => 'required|file|mimes:jpg,jpeg,png|max:2048'
+            // 'image' => 'required|file|mimes:jpg,jpeg,png|max:2048'
+            'image' => 'required|file|mimes:jpg,jpeg,png'
         ]);
 
         $file = $request->file('image');

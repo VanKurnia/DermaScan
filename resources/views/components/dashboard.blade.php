@@ -2,7 +2,8 @@
     <main class="p-4 md:ml-64 h-auto pt-20">
         <div class="min-h-screen">
             <div class="mx-auto max-w-screen-sm text-center mb-2 mt-5 lg:mb-6">
-                <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Scan Kulit Anda
+                <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+                    Scan Kulit Anda
                 </h2>
 
                 {{-- manage premium service --}}
@@ -102,6 +103,25 @@
                     *Pastikan gambar menangkap kondisi kulit dengan pencahayaan dan fokus yang jelas
                 </p>
 
+                <dd
+                    class="inline-flex items-center rounded bg-amber-100 px-2.5 py-0.5 text-medium font-semibold text-amber-600 dark:bg-amber-800 dark:text-amber-300 mt-3">
+                    Hasil diagnosis yang ditampilkan oleh Dermascan bersifat indikatif dan bukan pengganti diagnosis
+                    medis profesional.
+                </dd>
+
+                <?php if ($premium_info['status'] == '' && $premium_info['premium_scans'] < 1) { ?>
+                <div class="flex justify-center items-center">
+                    <a href="/pay-per-use">
+                        <div
+                            class="border-2 border-dashed border-gray-300 rounded-lg dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 h-32 md:h-64 flex flex-col justify-center items-center max-w-fit max-h-fit p-3 mt-3">
+                            <span class="font-semibold text-gray-900 dark:text-white">
+                                Nikmati hasil scan yang lebih detail dengan DermaScan Pro✨
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                <?php } ?>
+
                 {{-- Button Kirim --}}
                 <button id="btnAnalisaKamera" class="hidden mt-4 px-4 py-2 bg-green-500 dark:text-white rounded">
                     Analisa
@@ -116,9 +136,9 @@
                     Ambil Gambar
                 </button>
             </div>
-
         </div>
     </main>
+
 
     <script>
         // MENANGANI KAMERA
