@@ -3,36 +3,48 @@ on:
   push:
     branches:
       - main
+
 jobs:
   FTP-Deploy-Action:
-    name: FTP-Deploy-Action
+    name: Deploy Laravel to CPanel
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.1.0
       with:
         fetch-depth: 2 
-    - name: Build assets
-      run: npm install && npm run build
 
+    # Build frontend assets (hasilnya masuk ke public/build)
+    - name: Build assets
+      run: |
+        npm install
+        npm run build
+
+    # Install PHP & Composer hanya untuk generate vendor di runner (optional)
+    # bisa di-skip kalau vendor sudah ada di server
     - name: Install PHP and Composer
       uses: shivammathur/setup-php@v2
       with:
-          php-version: '8.3' # Adjust to match the PHP version used by your Laravel project
-          tools: 'composer'
+        php-version: '8.3'
+        tools: composer
 
     - name: Install PHP dependencies
       run: composer install --no-dev --optimize-autoloader
 
-    # Deploy Laravel core (di luar public_html)
-    - name: FTP-Deploy-Action
+    # Deploy Laravel core tanpa vendor, node_modules, .git, .env
+    - name: Deploy Laravel App
       uses: SamKirkland/FTP-Deploy-Action@4.3.3
       with:
         server: ${{ secrets.SERVER }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         server-dir: project/dermascan.ivan-kurniawan.my.id/
+        exclude: |
+          vendor/**
+          node_modules/**
+          .git*
+          .env
 
-    # Deploy hanya isi folder public/ ke public_html/subdomain
+    # Deploy folder public/ (tanpa index.php biar tidak ter-overwrite)
     - name: Deploy Public Folder
       uses: SamKirkland/FTP-Deploy-Action@4.3.3
       with:
